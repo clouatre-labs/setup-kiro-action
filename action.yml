@@ -74,8 +74,8 @@ runs:
           exit 1
         fi
         
-        # Download URL (Linux only, always from /latest/ path)
-        DOWNLOAD_URL="https://desktop-release.q.us-east-1.amazonaws.com/latest/kirocli-${KIRO_ARCH}-linux.zip"
+        # Download URL (Linux only, versioned path)
+        DOWNLOAD_URL="https://desktop-release.q.us-east-1.amazonaws.com/${{ inputs.version }}/kirocli-${KIRO_ARCH}-linux.zip"
         echo "Downloading from: $DOWNLOAD_URL"
         
         # Download and extract
