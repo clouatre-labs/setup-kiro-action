@@ -1,11 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices"],
+  "extends": [
+    "config:best-practices"
+  ],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^action\\.yml$"],
-      "matchStrings": ["default:\\s*['\"](?<currentValue>\\d+\\.\\d+\\.\\d+)['\"]"],
+      "fileMatch": [
+        "^action\\.yml$"
+      ],
+      "matchStrings": [
+        "default:\\s*['\"](?<currentValue>\\d+\\.\\d+\\.\\d+)['\"]"
+      ],
       "depNameTemplate": "kiro-cli",
       "datasourceTemplate": "custom.kiro"
     }
@@ -20,8 +26,11 @@
   },
   "packageRules": [
     {
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "automerge": true
     }
-  ]
+  ],
+  "dependencyDashboard": false
 }
