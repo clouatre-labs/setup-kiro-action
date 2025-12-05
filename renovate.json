@@ -17,5 +17,11 @@
         "{\"releases\": [{\"version\": version}]}"
       ]
     }
-  }
+  },
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    }
+  ]
 }
