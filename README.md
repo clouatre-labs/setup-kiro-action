@@ -1,7 +1,8 @@
 # Setup Kiro CLI Action
 
 [![Test Action](https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml/badge.svg)](https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml)
-[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue.svg?colorA=24292e&colorB=0366d6&style=flat&longCache=true&logo=github)](https://github.com/marketplace/actions/setup-kiro-cli)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue?logo=github)](https://github.com/marketplace/actions/setup-kiro-cli)
+[![Composite Action](https://img.shields.io/badge/Composite-Action-green?logo=github)](https://docs.github.com/en/actions/creating-actions/about-custom-actions#composite-actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Latest Release](https://img.shields.io/github/v/release/clouatre-labs/setup-kiro-action)](https://github.com/clouatre-labs/setup-kiro-action/releases/latest)
 
@@ -9,12 +10,12 @@ GitHub Action to install and cache [Kiro CLI](https://kiro.dev/docs/cli/) for us
 
 **Unofficial community action.** Not affiliated with or endorsed by Amazon Web Services (AWS). "Kiro" and "Amazon Web Services" are trademarks of AWS.
 
-## Quick Start
+## Quick Start - Tier 1 (Maximum Security)
 
 > [!IMPORTANT]
 > **Prompt Injection Risk:** When AI analyzes user-controlled input (git diffs, code comments, commit messages), malicious actors can embed instructions to manipulate output. This applies to ANY AI tool, not just Kiro CLI or this action.
 > 
-> For production use, see [examples/](examples/) for defensive patterns (tool output analysis, input sanitization, trusted-only execution).
+> For production use, see [Security Patterns](#security-patterns) below for three defensive tiers (tool output analysis, manual approval, trusted-only execution).
 
 ```yaml
 name: Linter Analysis with Kiro CLI
@@ -70,10 +71,19 @@ jobs:
 
 **Safe Pattern:** AI analyzes tool output (ruff, trivy, semgrep), not raw code.
 
-**Unsafe Pattern:** AI analyzes git diffs directly - vulnerable to prompt injection.
+**Unsafe Pattern:** AI analyzes git diffs directly → vulnerable to prompt injection.
 
-See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.  
-See [examples/](examples/) for different security tiers.
+See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
+
+## Security Patterns
+
+This action supports three security tiers for AI-augmented CI/CD:
+
+- **Tier 1 (Maximum Security)**: AI analyzes only tool output (JSON), never raw code. [See workflow](examples/tier1-maximum-security.yml)
+- **Tier 2**: AI sees file stats, requires manual approval. [See workflow](examples/tier2-balanced-security.yml)
+- **Tier 3**: Full diff analysis, trusted teams only. [See workflow](examples/tier3-advanced-patterns.yml)
+
+Read the full explanation: [AI-Augmented CI/CD blog post](https://clouatre.ca/posts/ai-augmented-cicd)
 
 ## Inputs
 
@@ -108,8 +118,6 @@ Self-hosted ARM64 runners may work but are untested.
 ### Method 1: OIDC (Recommended for GitHub Actions)
 
 Uses GitHub's OIDC provider for secure, credential-free authentication.
-
-**One-time AWS Setup:**
 
 1. Create OIDC provider:
 ```bash
@@ -157,7 +165,7 @@ aws iam create-open-id-connect-provider \
 }
 ```
 
-**Workflow usage:**
+4. In your workflow:
 ```yaml
 permissions:
   id-token: write  # Required for OIDC
@@ -172,15 +180,7 @@ permissions:
     enable-sigv4: true  # Required with OIDC
 ```
 
-**Benefits:**
-- No long-lived credentials in GitHub Secrets
-- Automatic token rotation (1-hour sessions)
-- Scope to specific repos/branches
-- AWS security best practice
-
 ### Method 2: IAM User Credentials (Local Development)
-
-For local testing or non-GitHub CI/CD environments.
 
 ```yaml
 - uses: clouatre-labs/setup-kiro-action@v1
@@ -194,7 +194,7 @@ For local testing or non-GitHub CI/CD environments.
   run: kiro-cli-chat chat --no-interactive "What is 2+2?"
 ```
 
-**Important:** SIGV4 mode requires temporary credentials (session token). Do not use `enable-sigv4: true` with IAM user credentials (AKIA* keys).
+**Important:** Do not use `enable-sigv4: true` with long-lived IAM credentials (AKIA* keys).
 
 ## Examples
 
@@ -220,16 +220,12 @@ This action defaults to a tested version that's automatically updated weekly.
 
 ## How It Works
 
-1. Checks if running on Linux (macOS not supported via this action)
-2. Checks cache for Kiro CLI binary matching version and platform
-3. If cache miss, downloads from AWS CDN: `https://desktop-release.q.us-east-1.amazonaws.com/latest/kirocli-{arch}-linux.zip`
-4. Optionally verifies SHA256 checksum (if `verify-checksum: true`)
-5. Extracts and installs `kiro-cli-chat` binary to `~/.local/bin/`
-6. Adds binary location to `$GITHUB_PATH`
-7. Optionally configures SIGV4 authentication
-8. Verifies installation with `kiro-cli-chat --version`
-
-**Note:** Only the `kiro-cli-chat` binary is installed (141MB). This is sufficient for CI/CD use cases. The `kiro-cli` wrapper (100MB) and `kiro-cli-term` (74MB) are not needed for automated workflows.
+1. Checks cache for Kiro CLI binary matching version and platform
+2. If cache miss, downloads from AWS CDN
+3. Extracts `kiro-cli-chat` binary to `~/.local/bin/`
+4. Adds binary location to `$GITHUB_PATH`
+5. Optionally configures SIGV4 authentication
+6. Verifies installation with `kiro-cli-chat --version`
 
 ## Cache Key Format
 
@@ -276,18 +272,6 @@ For macOS, use the official install script directly in your workflow:
 ### Cache not working
 
 The cache key includes OS and architecture. If you change runners or platforms, a new cache entry will be created. This is expected behavior.
-
-### SHA256 verification failed
-
-If checksum verification fails:
-
-1. **Retry the workflow** - May be a transient CDN issue
-2. **Check AWS CDN status** - Verify https://status.aws.amazon.com/
-3. **Disable verification temporarily:**
-   ```yaml
-   verify-checksum: false
-   ```
-4. **Report the issue** - If problem persists, open an issue with the version number
 
 ## Development
 
