@@ -19,6 +19,7 @@ permissions:
 jobs:
   test-ubuntu-x64:
     name: Test on Ubuntu x64
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,6 +42,7 @@ jobs:
 
   test-cache:
     name: Test caching
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -61,6 +63,7 @@ jobs:
 
   test-sigv4-config:
     name: Test SIGV4 configuration
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -87,6 +90,7 @@ jobs:
 
   test-checksum-verification:
     name: Test SHA256 verification
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -104,6 +108,7 @@ jobs:
 
   test-platform-check:
     name: Test platform check (should skip on macOS)
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
     runs-on: macos-latest
     continue-on-error: true
     steps:
