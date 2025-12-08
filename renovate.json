@@ -6,8 +6,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^action\\.yml$"
+      "managerFilePatterns": [
+        "/^action\\.yml$/"
       ],
       "matchStrings": [
         "default:\\s*['\"](?<currentValue>\\d+\\.\\d+\\.\\d+)['\"]"
