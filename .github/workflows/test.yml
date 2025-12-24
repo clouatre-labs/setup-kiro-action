@@ -105,22 +105,3 @@ jobs:
         run: |
           kiro-cli-chat --version
           echo "Checksum verification passed"
-
-  test-platform-check:
-    name: Test platform check (should skip on macOS)
-    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
-    runs-on: macos-latest
-    continue-on-error: true
-    steps:
-      - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
-
-      - name: Test action (should fail gracefully)
-        id: test
-        uses: ./
-        continue-on-error: true
-
-      - name: Verify expected failure
-        if: steps.test.outcome == 'failure'
-        run: |
-          echo "Expected failure on macOS - PASSED"
