@@ -3,6 +3,10 @@
   "extends": [
     "config:best-practices"
   ],
+  "platformAutomerge": true,
+  "labels": [
+    "dependencies"
+  ],
   "customManagers": [
     {
       "customType": "regex",
@@ -28,6 +32,12 @@
     {
       "matchUpdateTypes": [
         "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "matchManagers": [
+        "github-actions"
       ],
       "automerge": true
     }
