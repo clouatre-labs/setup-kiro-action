@@ -14,7 +14,7 @@ inputs:
   version:
     description: 'Kiro CLI version to install'
     required: false
-    default: '1.23.1'
+    default: '1.24.0'
   aws-region:
     description: 'AWS region for Kiro CLI operations'
     required: false
