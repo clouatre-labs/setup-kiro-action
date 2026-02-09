@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Latest Release](https://img.shields.io/github/v/release/clouatre-labs/setup-kiro-action)](https://github.com/clouatre-labs/setup-kiro-action/releases/latest)
 
-GitHub Action to install and cache [Kiro CLI](https://kiro.dev/docs/cli/) for use in workflows.
+GitHub Action to install and cache [Kiro CLI](https://kiro.dev/docs/cli/) on GitHub-hosted runners. Provides automatic binary caching and headless IAM authentication via SIGV4 for AI-augmented CI/CD pipelines on AWS.
 
 **Unofficial community action.** Not affiliated with or endorsed by Amazon Web Services (AWS). "Kiro" and "Amazon Web Services" are trademarks of AWS.
 
@@ -196,44 +196,21 @@ permissions:
 
 **Important:** Do not use `enable-sigv4: true` with long-lived IAM credentials (AKIA* keys).
 
-## Examples
-
-### Pin to Specific Version
-
-```yaml
-- uses: clouatre-labs/setup-kiro-action@v1
-  with:
-    version: '1.20.2'  # Use any specific version
-    verify-checksum: true  # Recommended for production
-```
-
 ## Version Management
 
-This action defaults to a tested version that's automatically updated weekly.
+This action defaults to a tested version that is automatically updated weekly.
+To pin a specific version:
 
-**Pin to a specific version:**
 ```yaml
 - uses: clouatre-labs/setup-kiro-action@v1
   with:
     version: '1.20.2'
+    # verify-checksum: true  # Not yet supported upstream
 ```
 
 ## How It Works
 
-1. Checks cache for Kiro CLI binary matching version and platform
-2. If cache miss, downloads from AWS CDN
-3. Extracts `kiro-cli-chat` binary to `~/.local/bin/`
-4. Adds binary location to `$GITHUB_PATH`
-5. Optionally configures SIGV4 authentication
-6. Verifies installation with `kiro-cli-chat --version`
-
-## Cache Key Format
-
-```
-kiro-{version}-{os}-{arch}
-```
-
-Example: `kiro-1.20.2-Linux-X64`
+On first run, the action downloads the Kiro CLI binary from AWS CDN and caches it at `~/.local/bin/`. Subsequent runs restore from cache. When `enable-sigv4` is set, the action exports `AMAZON_Q_SIGV4=true` for headless IAM authentication.
 
 ## Troubleshooting
 
@@ -275,28 +252,7 @@ The cache key includes OS and architecture. If you change runners or platforms, 
 
 ## Development
 
-This is a composite action (YAML-based) with no compilation required.
-
-### Running Test Workflows
-
-To run the Kiro CLI test workflow (`.github/workflows/test-kiro-cli.yml`):
-
-```bash
-# Add AWS_ROLE_ARN secret to your repository
-gh secret set AWS_ROLE_ARN --body "arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>"
-```
-
-Requires OIDC provider configured (see Authentication Methods above).
-
-### Testing Locally
-
-```bash
-# Clone the repository
-git clone https://github.com/clouatre-labs/setup-kiro-action
-cd setup-kiro-action
-
-# Test in a workflow (see .github/workflows/test.yml)
-```
+This is a composite action (YAML-based) with no compilation required. See [`.github/workflows/test.yml`](.github/workflows/test.yml) for the test workflow. OIDC provider setup is required for SIGV4 tests (see Authentication Methods above).
 
 ## Migration from Q CLI
 
@@ -319,6 +275,7 @@ MIT - See [LICENSE](LICENSE)
 
 ## Related
 
+- [AI-Augmented CI/CD](https://clouatre.ca/posts/ai-augmented-cicd/) - Blog post on the 3-tier security model for AI code review in CI/CD pipelines
 - [Kiro CLI Documentation](https://kiro.dev/docs/cli/) - Official Kiro CLI documentation
 - [Amazon Q Developer CLI](https://github.com/aws/amazon-q-developer-cli) - Upstream repository (Apache 2.0)
 - [Setup Q CLI Action](https://github.com/clouatre-labs/setup-q-cli-action) - Previous action for Q CLI (deprecated)
