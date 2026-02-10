@@ -205,7 +205,7 @@ To pin a specific version:
 - uses: clouatre-labs/setup-kiro-action@v1
   with:
     version: '1.20.2'
-    # verify-checksum: true  # Not yet supported upstream
+    verify-checksum: true
 ```
 
 ## How It Works
