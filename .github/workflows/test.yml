@@ -119,7 +119,7 @@ jobs:
         with:
           advanced-security: false
           annotations: true
-          min-severity: error
+          min-severity: high
 
   ci-result:
     name: CI Result
