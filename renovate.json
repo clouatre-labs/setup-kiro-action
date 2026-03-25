@@ -1,12 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:best-practices"
-  ],
+  "extends": ["config:best-practices"],
+  "labels": ["dependencies"],
+  "minimumReleaseAge": "3 days",
   "platformAutomerge": true,
-  "labels": [
-    "dependencies"
-  ],
+  "dependencyDashboard": false,
+  "schedule": ["before 6am on monday"],
+  "timezone": "UTC",
   "customManagers": [
     {
       "customType": "regex",
@@ -30,18 +30,15 @@
   },
   "packageRules": [
     {
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
+      "groupName": "non-major",
+      "matchUpdateTypes": ["patch", "minor", "digest", "pin", "lockFileMaintenance"],
       "automerge": true
     },
     {
-      "matchManagers": [
-        "github-actions"
-      ],
+      "groupName": "github-actions",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["patch", "minor", "digest", "pin", "lockFileMaintenance"],
       "automerge": true
     }
-  ],
-  "dependencyDashboard": false
+  ]
 }
