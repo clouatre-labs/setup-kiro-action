@@ -108,11 +108,24 @@ jobs:
           kiro-cli-chat --version
           echo "Checksum verification passed"
 
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: zizmorcore/zizmor-action@71321a20a9ded102f6e9ce5718a2fcec2c4f70d8 # v0.5.2
+        with:
+          advanced-security: false
+          annotations: true
+          min-severity: error
+
   ci-result:
     name: CI Result
     runs-on: ubuntu-24.04
     if: always()
-    needs: [test-ubuntu-x64, test-cache, test-sigv4-config, test-checksum-verification]
+    needs: [test-ubuntu-x64, test-cache, test-sigv4-config, test-checksum-verification, zizmor]
     permissions: {}
     steps:
       - name: Verify all jobs passed or were skipped
