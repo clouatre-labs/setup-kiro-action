@@ -21,8 +21,8 @@ permissions:
 jobs:
   test-ubuntu-x64:
     name: Test on Ubuntu x64
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -44,8 +44,8 @@ jobs:
 
   test-cache:
     name: Test caching
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -65,8 +65,8 @@ jobs:
 
   test-sigv4-config:
     name: Test SIGV4 configuration
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -92,8 +92,8 @@ jobs:
 
   test-checksum-verification:
     name: Test SHA256 verification
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
