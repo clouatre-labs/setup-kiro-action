@@ -59,8 +59,8 @@ runs:
       id: install
       if: steps.cache-kiro.outputs.cache-hit != 'true'
       shell: bash
-      run: |
-        echo "::group::Installing Kiro CLI ${{ inputs.version }}"  # zizmor: ignore[template-injection]
+      run: | # zizmor: ignore[template-injection]
+        echo "::group::Installing Kiro CLI ${{ inputs.version }}"
         mkdir -p ~/.local/bin
         
         # Determine architecture
@@ -75,14 +75,14 @@ runs:
         fi
         
         # Download URL (Linux only, versioned path)
-        DOWNLOAD_URL="https://desktop-release.q.us-east-1.amazonaws.com/${{ inputs.version }}/kirocli-${KIRO_ARCH}-linux.zip"  # zizmor: ignore[template-injection]
+        DOWNLOAD_URL="https://desktop-release.q.us-east-1.amazonaws.com/${{ inputs.version }}/kirocli-${KIRO_ARCH}-linux.zip"
         echo "Downloading from: $DOWNLOAD_URL"
         
         # Download and extract
         curl --proto '=https' --tlsv1.2 -sSfL "$DOWNLOAD_URL" -o kiro.zip
         
         # Verify checksum if requested
-        if [ "${{ inputs.verify-checksum }}" = "true" ]; then  # zizmor: ignore[template-injection]
+        if [ "${{ inputs.verify-checksum }}" = "true" ]; then
           echo "Downloading SHA256 checksum..."
           curl --proto '=https' --tlsv1.2 -sSfL "${DOWNLOAD_URL}.sha256" -o kiro.zip.sha256
           
@@ -103,7 +103,7 @@ runs:
           ACTUAL_VERSION=$(grep '^BUILD_VERSION=' kirocli/BUILD-INFO | cut -d= -f2)
           echo "version=${ACTUAL_VERSION}" >> $GITHUB_OUTPUT
         else
-          echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT  # zizmor: ignore[template-injection]
+          echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
         fi
         
         # Copy only kiro-cli-chat binary (sufficient for CI/CD)
@@ -118,16 +118,16 @@ runs:
     - name: Setup PATH
       id: setup-path
       shell: bash
-      run: |
-        echo "$HOME/.local/bin" >> $GITHUB_PATH  # zizmor: ignore[dangerous-write]
+      run: | # zizmor: ignore[github-env]
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
         echo "path=$HOME/.local/bin" >> $GITHUB_OUTPUT
 
     - name: Configure SIGV4 authentication
       if: inputs.enable-sigv4 == 'true'
       shell: bash
-      run: |
-        echo "AMAZON_Q_SIGV4=true" >> $GITHUB_ENV  # zizmor: ignore[dangerous-write]
-        echo "AWS_REGION=${{ inputs.aws-region }}" >> $GITHUB_ENV  # zizmor: ignore[template-injection]
+      run: | # zizmor: ignore[github-env,template-injection]
+        echo "AMAZON_Q_SIGV4=true" >> $GITHUB_ENV
+        echo "AWS_REGION=${{ inputs.aws-region }}" >> $GITHUB_ENV
 
     - name: Verify installation
       shell: bash
