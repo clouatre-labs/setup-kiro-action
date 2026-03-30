@@ -1,10 +1,13 @@
 # Setup Kiro CLI Action
 
-[![Test Action](https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml/badge.svg)](https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml)
-[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue?logo=github)](https://github.com/marketplace/actions/setup-kiro-cli)
-[![Composite Action](https://img.shields.io/badge/Composite-Action-green?logo=github)](https://docs.github.com/en/actions/creating-actions/about-custom-actions#composite-actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Latest Release](https://img.shields.io/github/v/release/clouatre-labs/setup-kiro-action)](https://github.com/clouatre-labs/setup-kiro-action/releases/latest)
+<p align="center">
+  <a href="https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml"><img alt="CI" src="https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml/badge.svg"></a>
+  <a href="https://github.com/marketplace/actions/setup-kiro-cli"><img alt="GitHub Marketplace" src="https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue?logo=github"></a>
+  <a href="https://docs.github.com/en/actions/creating-actions/about-custom-actions#composite-actions"><img alt="Composite Action" src="https://img.shields.io/badge/Composite-Action-green?logo=github"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
+  <a href="https://github.com/clouatre-labs/setup-kiro-action/releases/latest"><img alt="Latest Release" src="https://img.shields.io/github/v/release/clouatre-labs/setup-kiro-action"></a>
+  <a href="https://www.bestpractices.dev/projects/12330"><img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/12330/badge"></a>
+</p>
 
 GitHub Action to install and cache [Kiro CLI](https://kiro.dev/docs/cli/) on GitHub-hosted runners. Provides automatic binary caching and headless IAM authentication via SIGV4 for AI-augmented CI/CD pipelines on AWS.
 
