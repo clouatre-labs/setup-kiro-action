@@ -1,0 +1,16 @@
+{
+  "name": "fill-openssf-badge",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "fill": "bun run fill-openssf-badge.ts",
+    "fill:passing": "bun run fill-openssf-badge.ts --passing-only",
+    "fill:silver": "bun run fill-openssf-badge.ts --silver-only"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.52.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
+}
