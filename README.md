@@ -9,20 +9,32 @@
   <a href="https://www.bestpractices.dev/projects/12330"><img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/12330/badge"></a>
 </p>
 
-GitHub Action to install and cache [Kiro CLI](https://kiro.dev/docs/cli/) on GitHub-hosted runners. Provides automatic binary caching and headless IAM authentication via SIGV4 for AI-augmented CI/CD pipelines on AWS.
+<p align="center">A GitHub Action that installs and caches <a href="https://kiro.dev/docs/cli/">Kiro CLI</a> for CI/CD workflows, with headless IAM authentication via SIGV4.</p>
 
-**Unofficial community action.** Not affiliated with or endorsed by Amazon Web Services (AWS). "Kiro" and "Amazon Web Services" are trademarks of AWS.
-
-## Quick Start - Tier 1 (Maximum Security)
+**Unofficial community action.** Not affiliated with or endorsed by Amazon Web Services. "Kiro" and "Amazon Web Services" are trademarks of AWS.
 
 > [!IMPORTANT]
-> **Prompt Injection Risk:** When AI analyzes user-controlled input (git diffs, code comments, commit messages), malicious actors can embed instructions to manipulate output. This applies to ANY AI tool, not just Kiro CLI or this action.
-> 
-> For production use, see [Security Patterns](#security-patterns) below for three defensive tiers (tool output analysis, manual approval, trusted-only execution).
+> **Prompt Injection Risk:** When AI analyzes user-controlled input (git diffs, code comments, commit messages), malicious actors can embed instructions to manipulate output. This applies to ANY AI tool.
+>
+> For production use, see [Security Patterns](#security-patterns) below for three defensive tiers.
+
+## Usage
 
 ```yaml
-name: Linter Analysis with Kiro CLI
-on: [push]
+# Recommended: get latest v1.x updates automatically
+- uses: clouatre-labs/setup-kiro-action@v1
+
+# Pin to exact SHA (recommended for supply chain integrity)
+- uses: clouatre-labs/setup-kiro-action@e3b2b522c8d60d0e1f1e3596f13cc374d6345d52  # v1.0.0
+```
+
+**Current default Kiro CLI version:** See [`action.yml`](action.yml#L15)
+
+## Quick Start: Tier 1 (Maximum Security)
+
+```yaml
+name: AI Analysis - Maximum Security
+on: [pull_request]
 
 permissions:
   id-token: write
@@ -30,34 +42,34 @@ permissions:
 
 jobs:
   analyze:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
 
-      - name: Run Linter
+      - name: Lint Code
         run: pipx run ruff check --output-format=json . > lint.json || true
 
       - name: Configure AWS Credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7  # v6.0.0
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
 
       - name: Setup Kiro CLI
-        uses: clouatre-labs/setup-kiro-action@v1
+        uses: clouatre-labs/setup-kiro-action@e3b2b522c8d60d0e1f1e3596f13cc374d6345d52  # v1.0.0
         with:
           enable-sigv4: true
           aws-region: us-east-1
 
-      - name: AI Analysis of Linter Output
+      - name: AI Analysis
         run: |
           echo "Summarize these linting issues and suggest fixes:" > prompt.txt
           cat lint.json >> prompt.txt
           kiro-cli-chat chat --no-interactive "$(cat prompt.txt)" > analysis.md
 
-      - name: Upload Analysis Artifact
-        uses: actions/upload-artifact@v5
+      - name: Upload Analysis
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f  # v7
         with:
           name: ai-analysis
           path: analysis.md
@@ -67,16 +79,23 @@ jobs:
 
 - **Automatic caching** - Caches Kiro CLI binaries for faster subsequent runs
 - **SIGV4 authentication** - IAM-based headless authentication for CI/CD
-- **GitHub-hosted runners** - Supports x64 Ubuntu runners (simple, fast, manageable)
 - **Lightweight** - Composite action with no external dependencies
 
-## Security
+## Inputs
 
-**Safe Pattern:** AI analyzes tool output (ruff, trivy, semgrep), not raw code.
+| Input | Description | Required | Default |
+|-------|-------------|----------|---------|
+| `version` | Kiro CLI version to install | No | See [`action.yml`](action.yml#L15) |
+| `aws-region` | AWS region for Kiro CLI operations | No | `us-east-1` |
+| `enable-sigv4` | Enable SIGV4 authentication mode | No | `false` |
+| `verify-checksum` | Verify SHA256 checksum of downloaded binary | No | `true` |
 
-**Unsafe Pattern:** AI analyzes git diffs directly → vulnerable to prompt injection.
+## Outputs
 
-See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
+| Output | Description |
+|--------|-------------|
+| `kiro-version` | Installed Kiro CLI version |
+| `kiro-path` | Path to Kiro CLI binary directory |
 
 ## Security Patterns
 
@@ -86,23 +105,13 @@ This action supports three security tiers for AI-augmented CI/CD:
 - **Tier 2**: AI sees file stats, requires manual approval. [See workflow](examples/tier2-balanced-security.yml)
 - **Tier 3**: Full diff analysis, trusted teams only. [See workflow](examples/tier3-advanced-patterns.yml)
 
+**Safe Pattern:** AI analyzes tool output (ruff, trivy, semgrep), not raw code.
+
+**Unsafe Pattern:** AI analyzes git diffs directly, which is vulnerable to prompt injection.
+
 Read the full explanation: [AI-Augmented CI/CD blog post](https://clouatre.ca/posts/ai-augmented-cicd)
 
-## Inputs
-
-| Input | Description | Required | Default |
-|-------|-------------|----------|---------|
-| `version` | Kiro CLI version to install | No | See [`action.yml`](action.yml#L15) |
-| `aws-region` | AWS region for Kiro CLI operations | No | `us-east-1` |
-| `enable-sigv4` | Enable SIGV4 authentication mode | No | `false` |
-| `verify-checksum` | Verify SHA256 checksum of downloaded binary | No | `false` |
-
-## Outputs
-
-| Output | Description |
-|--------|-------------|
-| `kiro-version` | Installed Kiro CLI version |
-| `kiro-path` | Path to Kiro CLI binary directory |
+See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
 
 ## Supported Platforms
 
@@ -110,83 +119,35 @@ Read the full explanation: [AI-Augmented CI/CD blog post](https://clouatre.ca/po
 
 | OS | Architecture | Runner Label |
 |----|--------------|--------------|
-| Ubuntu | x64 | `ubuntu-latest`, `ubuntu-24.04`, `ubuntu-22.04` |
+| Ubuntu | x64 | `ubuntu-24.04`, `ubuntu-22.04` |
 
-**Not supported:** macOS, Windows. For macOS, use the official install script: `curl -fsSL https://cli.kiro.dev/install | bash`
+macOS and Windows are not supported. For macOS, use the official install script: `curl -fsSL https://cli.kiro.dev/install | bash`
 
 Self-hosted ARM64 runners may work but are untested.
 
-## Authentication Methods
+## Authentication
 
-### Method 1: OIDC (Recommended for GitHub Actions)
+### OIDC (Recommended)
 
-Uses GitHub's OIDC provider for secure, credential-free authentication.
+Uses GitHub's OIDC provider for secure, credential-free authentication. See the [Tier 1 example](examples/tier1-maximum-security.yml) for a complete workflow.
 
-1. Create OIDC provider:
-```bash
-aws iam create-open-id-connect-provider \
-  --url https://token.actions.githubusercontent.com \
-  --client-id-list sts.amazonaws.com \
-  --thumbprint-list 6938fd4d98bab03faadb97b34396831e3780aea1
-```
+Required IAM permissions:
 
-2. Create IAM role with trust policy:
 ```json
 {
   "Version": "2012-10-17",
   "Statement": [{
     "Effect": "Allow",
-    "Principal": {
-      "Federated": "arn:aws:iam::<ACCOUNT_ID>:oidc-provider/token.actions.githubusercontent.com"
-    },
-    "Action": "sts:AssumeRoleWithWebIdentity",
-    "Condition": {
-      "StringEquals": {
-        "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
-      },
-      "StringLike": {
-        "token.actions.githubusercontent.com:sub": "repo:<ORG>/*:*"
-      }
-    }
-  }]
-}
-```
-
-3. Attach Kiro/Q Developer policy:
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [{
-    "Effect": "Allow",
-    "Action": [
-      "q:StartConversation",
-      "q:SendMessage",
-      "q:GetConversation"
-    ],
+    "Action": ["q:StartConversation", "q:SendMessage", "q:GetConversation"],
     "Resource": "*"
   }]
 }
 ```
 
-4. In your workflow:
-```yaml
-permissions:
-  id-token: write  # Required for OIDC
-
-- uses: aws-actions/configure-aws-credentials@v5
-  with:
-    role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-    aws-region: us-east-1
-
-- uses: clouatre-labs/setup-kiro-action@v1
-  with:
-    enable-sigv4: true  # Required with OIDC
-```
-
-### Method 2: IAM User Credentials (Local Development)
+### IAM Credentials (Local / Simple Setups)
 
 ```yaml
-- uses: clouatre-labs/setup-kiro-action@v1
+- uses: clouatre-labs/setup-kiro-action@e3b2b522c8d60d0e1f1e3596f13cc374d6345d52  # v1.0.0
   # Do NOT set enable-sigv4 with long-lived credentials
 
 - name: Use Kiro CLI
@@ -197,97 +158,49 @@ permissions:
   run: kiro-cli-chat chat --no-interactive "What is 2+2?"
 ```
 
-**Important:** Do not use `enable-sigv4: true` with long-lived IAM credentials (AKIA* keys).
-
-## Version Management
-
-This action defaults to a tested version that is automatically updated weekly.
-To pin a specific version:
-
-```yaml
-- uses: clouatre-labs/setup-kiro-action@v1
-  with:
-    version: '1.20.2'
-    verify-checksum: true
-```
+Do not use `enable-sigv4: true` with long-lived IAM credentials (AKIA\* keys).
 
 ## How It Works
 
 On first run, the action downloads the Kiro CLI binary from AWS CDN and caches it at `~/.local/bin/`. Subsequent runs restore from cache. When `enable-sigv4` is set, the action exports `AMAZON_Q_SIGV4=true` for headless IAM authentication.
 
+> **SIGV4 Discovery:** The `AMAZON_Q_SIGV4` environment variable was discovered through source code analysis of the [amazon-q-developer-cli](https://github.com/aws/amazon-q-developer-cli) repository. It is an undocumented feature that enables headless IAM authentication for CI/CD environments.
+
 ## Troubleshooting
 
-### Binary not found after installation
+**Binary not found:** Ensure the action step runs before any `kiro-cli-chat` invocation.
 
-Ensure you're using the action before attempting to run `kiro-cli-chat`:
+**SIGV4 not working:** Verify `enable-sigv4: true` is set, AWS credentials are available, and the IAM role includes Amazon Q/Kiro permissions.
 
-```yaml
-- uses: clouatre-labs/setup-kiro-action@v1
-- run: kiro-cli-chat --version  # This will work
-```
-
-### SIGV4 authentication not working
-
-Verify:
-1. `enable-sigv4: true` is set in action inputs
-2. AWS credentials are available as environment variables
-3. IAM permissions include Amazon Q/Kiro access
-4. Correct AWS region is configured
-
-### Unsupported platform error
-
-Kiro CLI binaries are only available for Linux via this action. Use `ubuntu-latest`, `ubuntu-24.04`, or `ubuntu-22.04` runners:
-
-```yaml
-jobs:
-  build:
-    runs-on: ubuntu-latest  # Recommended
-```
-
-For macOS, use the official install script directly in your workflow:
-```yaml
-- run: curl -fsSL https://cli.kiro.dev/install | bash
-```
-
-### Cache not working
-
-The cache key includes OS and architecture. If you change runners or platforms, a new cache entry will be created. This is expected behavior.
-
-## Development
-
-This is a composite action (YAML-based) with no compilation required. See [`.github/workflows/test.yml`](.github/workflows/test.yml) for the test workflow. OIDC provider setup is required for SIGV4 tests (see Authentication Methods above).
+**Cache not working:** The cache key includes OS and architecture. Changing runners creates a new cache entry - this is expected.
 
 ## Migration from Q CLI
-
-If you're migrating from `setup-q-cli-action`:
 
 | Q CLI | Kiro CLI |
 |-------|----------|
 | `clouatre-labs/setup-q-cli-action@v1` | `clouatre-labs/setup-kiro-action@v1` |
-| `qchat chat --no-interactive "prompt"` | `kiro-cli-chat chat --no-interactive "prompt"` |
-| `${{ steps.q.outputs.q-version }}` | `${{ steps.kiro.outputs.kiro-version }}` |
-| `${{ steps.q.outputs.q-path }}` | `${{ steps.kiro.outputs.kiro-path }}` |
+| `qchat chat --no-interactive "..."` | `kiro-cli-chat chat --no-interactive "..."` |
+| `steps.q.outputs.q-version` | `steps.kiro.outputs.kiro-version` |
+| `steps.q.outputs.q-path` | `steps.kiro.outputs.kiro-path` |
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or PR.
+Contributions are welcome. Please open an issue or PR.
 
 ## License
 
-MIT - See [LICENSE](LICENSE)
+MIT. See [LICENSE](LICENSE).
 
 ## Related
 
-- [AI-Augmented CI/CD](https://clouatre.ca/posts/ai-augmented-cicd/) - Blog post on the 3-tier security model for AI code review in CI/CD pipelines
+- [AI-Augmented CI/CD](https://clouatre.ca/posts/ai-augmented-cicd/) - 3-tier security model for AI code review in CI/CD pipelines
 - [Kiro CLI Documentation](https://kiro.dev/docs/cli/) - Official Kiro CLI documentation
 - [Amazon Q Developer CLI](https://github.com/aws/amazon-q-developer-cli) - Upstream repository (Apache 2.0)
-- [Setup Q CLI Action](https://github.com/clouatre-labs/setup-q-cli-action) - Previous action for Q CLI (deprecated)
 - [Setup Goose Action](https://github.com/clouatre-labs/setup-goose-action) - Similar action for Goose AI agent
+- [Setup Q CLI Action](https://github.com/clouatre-labs/setup-q-cli-action) - Previous action for Q CLI (deprecated)
 
 ## Acknowledgments
 
 Built by [clouatre-labs](https://github.com/clouatre-labs) for the developer community.
 
 **Trademark Notice:** "Kiro" and "Amazon Web Services" are trademarks of Amazon.com, Inc. or its affiliates. This project is not affiliated with, endorsed by, or sponsored by Amazon Web Services.
-
-**SIGV4 Discovery:** The `AMAZON_Q_SIGV4` authentication mechanism was discovered through source code analysis of the [amazon-q-developer-cli](https://github.com/aws/amazon-q-developer-cli) repository. It is an undocumented feature that enables headless IAM authentication for CI/CD environments.
