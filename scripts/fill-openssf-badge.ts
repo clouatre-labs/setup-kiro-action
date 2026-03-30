@@ -87,7 +87,7 @@ const ANSWERS: Answer[] = [
     id: "maintained",
     status: "Met",
     justification:
-      "Active development: v1.0.0 released 2025-11-27 with core installation, caching, and SIGV4 authentication features. URL: https://github.com/clouatre-labs/setup-kiro-action/releases",
+      "Active development: v1.0.1 released 2026-03-30 with CI hardening, zizmor SHA-pinning enforcement, OpenSSF badge infrastructure, and documentation improvements. URL: https://github.com/clouatre-labs/setup-kiro-action/releases",
   },
   {
     id: "repo_public",
@@ -135,7 +135,7 @@ const ANSWERS: Answer[] = [
     id: "release_notes",
     status: "Met",
     justification:
-      "GitHub Releases page documents features for the v1.0.0 release. URL: https://github.com/clouatre-labs/setup-kiro-action/releases",
+      "GitHub Releases page documents features and changes for each release (v1.0.0, v1.0.1). URL: https://github.com/clouatre-labs/setup-kiro-action/releases",
   },
   {
     id: "release_notes_vulns",
