@@ -1,5 +1,5 @@
 name: 'Setup Kiro CLI'
-description: 'Install and cache Kiro CLI for GitHub Actions workflows'
+description: 'Install and cache Kiro CLI (formerly Amazon Q Developer CLI) for GitHub Actions workflows'
 author: 'Hugues Clouâtre'
 
 keywords:
@@ -25,6 +25,10 @@ inputs:
     default: 'false'
   verify-checksum:
     description: 'Verify SHA256 checksum of downloaded binary'
+    required: false
+    default: 'true'
+  musl:
+    description: 'Use musl-linked binary for older glibc environments (e.g. Alpine Linux)'
     required: false
     default: 'false'
 
@@ -53,7 +57,7 @@ runs:
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
       with:
         path: ~/.local/bin/kiro-cli-chat
-        key: kiro-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}
+        key: kiro-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}-${{ inputs.musl == 'true' && 'musl' || 'glibc' }}
 
     - name: Install Kiro CLI
       id: install
@@ -75,7 +79,11 @@ runs:
         fi
         
         # Download URL (Linux only, versioned path)
-        DOWNLOAD_URL="https://desktop-release.q.us-east-1.amazonaws.com/${{ inputs.version }}/kirocli-${KIRO_ARCH}-linux.zip"
+        MUSL_SUFFIX=""
+        if [ "${{ inputs.musl }}" = "true" ]; then
+          MUSL_SUFFIX="-musl"
+        fi
+        DOWNLOAD_URL="https://desktop-release.q.us-east-1.amazonaws.com/${{ inputs.version }}/kirocli-${KIRO_ARCH}-linux${MUSL_SUFFIX}.zip"
         echo "Downloading from: $DOWNLOAD_URL"
         
         # Download and extract
