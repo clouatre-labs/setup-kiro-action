@@ -1000,12 +1000,12 @@ async function fillSection(page: Page, answers: Answer[]): Promise<void> {
       continue;
     }
 
+    await radio.scrollIntoViewIfNeeded().catch(() => {});
     const isChecked = await radio.isChecked().catch(() => false);
     const isDisabled = await radio.isDisabled().catch(() => false);
     if (isChecked || isDisabled) {
       console.log(`  SKIP: ${answer.id} (${isDisabled ? "disabled" : "already checked"})`);
     } else {
-      await radio.scrollIntoViewIfNeeded().catch(() => {});
       await radio.click({ force: true });
     }
 
