@@ -3,9 +3,7 @@
 <p align="center">
   <a href="https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml"><img alt="CI" src="https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml/badge.svg"></a>
   <a href="https://github.com/marketplace/actions/setup-kiro-cli"><img alt="GitHub Marketplace" src="https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue?logo=github"></a>
-  <a href="https://docs.github.com/en/actions/creating-actions/about-custom-actions#composite-actions"><img alt="Composite Action" src="https://img.shields.io/badge/Composite-Action-green?logo=github"></a>
   <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"></a>
-  <a href="https://github.com/clouatre-labs/setup-kiro-action/releases/latest"><img alt="Latest Release" src="https://img.shields.io/github/v/release/clouatre-labs/setup-kiro-action"></a>
   <a href="https://www.bestpractices.dev/projects/12330"><img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/12330/badge"></a>
 </p>
 
@@ -79,7 +77,7 @@ jobs:
 
 - **Automatic caching** - Caches Kiro CLI binaries for faster subsequent runs
 - **SIGV4 authentication** - IAM-based headless authentication for CI/CD
-- **Lightweight** - Composite action with no external dependencies
+- **Lightweight** - No external dependencies
 
 ## Inputs
 
