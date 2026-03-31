@@ -1,10 +1,9 @@
 # Setup Kiro CLI Action
 
 <p align="center">
-  <a href="https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml"><img alt="CI" src="https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml/badge.svg"></a>
-  <a href="https://github.com/marketplace/actions/setup-kiro-cli"><img alt="GitHub Marketplace" src="https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue?logo=github"></a>
-  <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"></a>
-  <a href="https://www.bestpractices.dev/projects/12330"><img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/12330/badge"></a>
+  <a href="https://github.com/marketplace/actions/setup-kiro-cli"><img alt="GitHub Marketplace" src="https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue?logo=github&style=for-the-badge" height="20"></a>
+  <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge" height="20"></a>
+  <a href="https://www.bestpractices.dev/projects/12330"><img alt="OpenSSF Best Practices" src="https://img.shields.io/cii/level/12330?style=for-the-badge" height="20"></a>
 </p>
 
 <p align="center">A GitHub Action that installs and caches <a href="https://kiro.dev/docs/cli/">Kiro CLI</a> for CI/CD workflows, with headless IAM authentication via SIGV4. OpenSSF silver certified: fewer than 1% of open source projects reach this level.</p>
