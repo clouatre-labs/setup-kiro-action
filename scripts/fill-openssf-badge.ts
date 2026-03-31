@@ -39,13 +39,13 @@ const ANSWERS: Answer[] = [
     id: "floss_license",
     status: "Met",
     justification:
-      "MIT license; OSI-approved. LICENSE file present at repository root. URL: https://github.com/clouatre-labs/setup-kiro-action/blob/main/LICENSE",
+      "Apache 2.0 license; OSI-approved. LICENSE file present at repository root. URL: https://github.com/clouatre-labs/setup-kiro-action/blob/main/LICENSE",
   },
   {
     id: "floss_license_osi",
     status: "Met",
     justification:
-      "MIT is on the OSI approved list. URL: https://opensource.org/license/mit",
+      "Apache 2.0 is on the OSI approved list. URL: https://opensource.org/license/apache-2.0",
   },
   {
     id: "license_location",
@@ -478,7 +478,7 @@ const ANSWERS: Answer[] = [
     id: "governance",
     status: "Met",
     justification:
-      "GOVERNANCE.md at the repository root describes the solo maintainer model, decision authority, and succession via MIT license and GitHub org transfer. URL: https://github.com/clouatre-labs/setup-kiro-action/blob/main/GOVERNANCE.md",
+      "GOVERNANCE.md at the repository root describes the solo maintainer model, decision authority, and succession via Apache 2.0 license and GitHub org transfer. URL: https://github.com/clouatre-labs/setup-kiro-action/blob/main/GOVERNANCE.md",
   },
   {
     id: "code_of_conduct",
@@ -496,13 +496,13 @@ const ANSWERS: Answer[] = [
     id: "access_continuity",
     status: "Met",
     justification:
-      "GOVERNANCE.md documents access continuity: MIT license permits any fork to continue independently, and GitHub org transfer is documented as the handoff mechanism. URL: https://github.com/clouatre-labs/setup-kiro-action/blob/main/GOVERNANCE.md",
+      "GOVERNANCE.md documents access continuity: Apache 2.0 license permits any fork to continue independently, and GitHub org transfer is documented as the handoff mechanism. URL: https://github.com/clouatre-labs/setup-kiro-action/blob/main/GOVERNANCE.md",
   },
   {
     id: "bus_factor",
     status: "Met",
     justification:
-      "GOVERNANCE.md acknowledges the single-maintainer nature (bus factor 1). The MIT license guarantees any fork can continue fully independently. URL: https://github.com/clouatre-labs/setup-kiro-action/blob/main/GOVERNANCE.md",
+      "GOVERNANCE.md acknowledges the single-maintainer nature (bus factor 1). The Apache 2.0 license guarantees any fork can continue fully independently. URL: https://github.com/clouatre-labs/setup-kiro-action/blob/main/GOVERNANCE.md",
   },
   {
     id: "documentation_roadmap",
