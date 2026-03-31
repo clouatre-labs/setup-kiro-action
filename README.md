@@ -7,7 +7,7 @@
   <a href="https://www.bestpractices.dev/projects/12330"><img alt="OpenSSF Best Practices" src="https://www.bestpractices.dev/projects/12330/badge"></a>
 </p>
 
-<p align="center">A GitHub Action that installs and caches <a href="https://kiro.dev/docs/cli/">Kiro CLI</a> for CI/CD workflows, with headless IAM authentication via SIGV4.</p>
+<p align="center">A GitHub Action that installs and caches <a href="https://kiro.dev/docs/cli/">Kiro CLI</a> for CI/CD workflows, with headless IAM authentication via SIGV4. OpenSSF silver certified: fewer than 1% of open source projects reach this level.</p>
 
 **Unofficial community action.** Not affiliated with or endorsed by Amazon Web Services. "Kiro" and "Amazon Web Services" are trademarks of AWS.
 
