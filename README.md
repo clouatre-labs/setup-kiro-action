@@ -1,7 +1,6 @@
 # Setup Kiro CLI Action
 
 <p align="center">
-  <a href="https://github.com/clouatre-labs/setup-kiro-action/actions/workflows/test.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/clouatre-labs/setup-kiro-action/test.yml?style=for-the-badge&label=CI" height="20"></a>
   <a href="https://github.com/marketplace/actions/setup-kiro-cli"><img alt="GitHub Marketplace" src="https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue?logo=github&style=for-the-badge" height="20"></a>
   <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge" height="20"></a>
   <a href="https://www.bestpractices.dev/projects/12330"><img alt="OpenSSF Best Practices" src="https://img.shields.io/cii/level/12330?style=for-the-badge" height="20"></a>
