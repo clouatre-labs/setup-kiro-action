@@ -50,6 +50,16 @@ The `main` branch requires:
 - Reporter will be credited in release notes
 - Security advisory will be published alongside the release
 
+## Security Features
+
+This action:
+- OpenSSF Best Practices **Silver** certified — fewer than 1% of open source projects reach this level ([badge](https://www.bestpractices.dev/projects/12330))
+- Downloads binaries only from official AWS Kiro CLI releases (`desktop-release.q.us-east-1.amazonaws.com`)
+- Uses GitHub Actions cache with version-specific keys
+- Requires minimal permissions (`contents: read`)
+- Does not store or transmit API keys (user-managed via secrets)
+- All commits to `main` are GPG-signed; required by branch protection rules
+
 ## Out of Scope
 
 - Kiro CLI vulnerabilities: Report to [AWS Amazon Q Developer CLI](https://github.com/aws/amazon-q-developer-cli/security)
