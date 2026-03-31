@@ -15,8 +15,8 @@ Community input is welcome via issues and pull requests. The project owner makes
 
 ## Access continuity
 
-The project lives under the `clouatre-labs` GitHub organization. Organization ownership can be transferred via GitHub's org transfer mechanism if needed. The MIT license guarantees that any fork can continue the project independently, regardless of the state of this repository.
+The project lives under the `clouatre-labs` GitHub organization. Organization ownership can be transferred via GitHub's org transfer mechanism if needed. The Apache 2.0 license guarantees that any fork can continue the project independently, regardless of the state of this repository.
 
 ## Bus factor
 
-This is a single-maintainer project. The MIT license and the GitHub org transfer mechanism together provide continuity -- any interested party can fork or take over the project.
+This is a single-maintainer project. The Apache 2.0 license and the GitHub org transfer mechanism together provide continuity -- any interested party can fork or take over the project.

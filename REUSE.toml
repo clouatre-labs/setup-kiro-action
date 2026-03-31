@@ -1,0 +1,7 @@
+version = 1
+
+[[annotations]]
+path = ["*.yml", "*.yaml", "*.md", "*.json", "*.ts", "*.sh", "*.txt", "examples/**/*", "scripts/**/*", ".github/**/*", "LICENSE", "LICENSES/**/*", "CONTRIBUTING*", "SECURITY*", "GOVERNANCE*", "ASSURANCE*", "CODE_OF_CONDUCT*"]
+precedence = "override"
+SPDX-FileCopyrightText = "2025-2026 Hugues Clouatre"
+SPDX-License-Identifier = "Apache-2.0"
