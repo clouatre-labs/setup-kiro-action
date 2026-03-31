@@ -23,7 +23,7 @@
 - uses: clouatre-labs/setup-kiro-action@v1
 
 # Pin to exact SHA (recommended for supply chain integrity)
-- uses: clouatre-labs/setup-kiro-action@e3b2b522c8d60d0e1f1e3596f13cc374d6345d52  # v1.0.0
+- uses: clouatre-labs/setup-kiro-action@91393ee22956aee30d31f53abc8d37ac69e02102  # v1.0.1
 ```
 
 **Current default Kiro CLI version:** See [`action.yml`](action.yml#L15)
@@ -55,7 +55,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Setup Kiro CLI
-        uses: clouatre-labs/setup-kiro-action@e3b2b522c8d60d0e1f1e3596f13cc374d6345d52  # v1.0.0
+        uses: clouatre-labs/setup-kiro-action@91393ee22956aee30d31f53abc8d37ac69e02102  # v1.0.1
         with:
           enable-sigv4: true
           aws-region: us-east-1
@@ -145,7 +145,7 @@ Required IAM permissions:
 ### IAM Credentials (Local / Simple Setups)
 
 ```yaml
-- uses: clouatre-labs/setup-kiro-action@e3b2b522c8d60d0e1f1e3596f13cc374d6345d52  # v1.0.0
+- uses: clouatre-labs/setup-kiro-action@91393ee22956aee30d31f53abc8d37ac69e02102  # v1.0.1
   # Do NOT set enable-sigv4 with long-lived credentials
 
 - name: Use Kiro CLI
