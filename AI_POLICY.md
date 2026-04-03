@@ -28,9 +28,10 @@ authorship credit belongs to a human, except automated dependency updates.
 - We read every line we approve. If a PR is too large to review carefully,
   we will ask for it to be split.
 
-Undisclosed AI-heavy submissions and bot-like submission patterns will
-result in the PR being closed without review and the contributor being
-blocked from the repository.
+We reserve the right to close PRs that do not meet these standards
+without review. Repeated violations or patterns of low-effort
+AI-generated submissions may result in restrictions on future
+contributions.
 
 ## Enforced controls
 
