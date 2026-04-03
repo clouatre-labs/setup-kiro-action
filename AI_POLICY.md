@@ -4,9 +4,8 @@
 # AI Policy
 
 AI coding tools are used in this project as productivity aids, the same
-way we use any other development tool. Every change merged into this
-repository reflects human judgment. AI assists in drafting and
-exploration; it does not author, decide, or review on our behalf.
+way we use any other development tool. Every decision, review, and
+authorship credit belongs to a human, except automated dependency updates.
 
 ## For contributors
 
