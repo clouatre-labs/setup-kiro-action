@@ -159,15 +159,18 @@ Do not use `enable-sigv4: true` with long-lived IAM credentials (AKIA\* keys).
 
 ## How It Works
 
-On first run, the action downloads the Kiro CLI binary from AWS CDN and caches it at `~/.local/bin/`. Subsequent runs restore from cache. When `enable-sigv4` is set, the action exports `AMAZON_Q_SIGV4=true` for headless IAM authentication.
+On first run, the action downloads the Kiro CLI binary from AWS CDN and caches it at `~/.local/bin/`. Subsequent runs restore from cache. When `enable-sigv4` is set, the action exports `AMAZON_Q_SIGV4=1` for headless IAM authentication.
 
 > **SIGV4 Discovery:** The `AMAZON_Q_SIGV4` environment variable was discovered through source code analysis of the [amazon-q-developer-cli](https://github.com/aws/amazon-q-developer-cli) repository. It is an undocumented feature that enables headless IAM authentication for CI/CD environments.
+
+> [!WARNING]
+> **SIGV4 not yet implemented in `kiro-cli-chat`:** Amazon did not port SIGV4 authentication when migrating Q CLI to Kiro CLI. Setting `enable-sigv4: true` will emit a CI warning but has no functional effect. Track upstream progress at [kirodotdev/Kiro#5938](https://github.com/kirodotdev/Kiro/issues/5938). For working SIGV4 headless authentication today, use [clouatre-labs/setup-q-cli-action](https://github.com/clouatre-labs/setup-q-cli-action) instead.
 
 ## Troubleshooting
 
 **Binary not found:** Ensure the action step runs before any `kiro-cli-chat` invocation.
 
-**SIGV4 not working:** Verify `enable-sigv4: true` is set, AWS credentials are available, and the IAM role includes Amazon Q/Kiro permissions.
+**SIGV4 not working:** `AMAZON_Q_SIGV4` is not yet implemented in `kiro-cli-chat`. This is a known upstream limitation tracked at [kirodotdev/Kiro#5938](https://github.com/kirodotdev/Kiro/issues/5938). Use [clouatre-labs/setup-q-cli-action](https://github.com/clouatre-labs/setup-q-cli-action) for working SIGV4 support.
 
 **Cache not working:** The cache key includes OS and architecture. Changing runners creates a new cache entry - this is expected.
 
