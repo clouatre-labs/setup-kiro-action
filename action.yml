@@ -134,7 +134,8 @@ runs:
       if: inputs.enable-sigv4 == 'true'
       shell: bash
       run: | # zizmor: ignore[github-env,template-injection]
-        echo "AMAZON_Q_SIGV4=true" >> $GITHUB_ENV
+        echo "::warning::SIGV4 authentication (AMAZON_Q_SIGV4) is not yet implemented in kiro-cli-chat. The environment variable will be set but has no effect. Track upstream progress at https://github.com/kirodotdev/Kiro/issues/5938. For working SIGV4 support, use clouatre-labs/setup-q-cli-action instead."
+        echo "AMAZON_Q_SIGV4=1" >> $GITHUB_ENV
         echo "AWS_REGION=${{ inputs.aws-region }}" >> $GITHUB_ENV
 
     - name: Verify installation
