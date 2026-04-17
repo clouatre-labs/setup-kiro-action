@@ -1,0 +1,39 @@
+name: AI Analysis - Token Cache Seeding
+
+on:
+  pull_request:
+
+# No OIDC permissions required for token cache seeding
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6
+
+      - name: Lint Code
+        run: pipx run ruff check --output-format=json . > lint.json || true
+
+      - name: Setup Kiro CLI
+        uses: clouatre-labs/setup-kiro-action@v1
+        with:
+          seed-token-cache: true
+          kiro-refresh-token: ${{ secrets.KIRO_REFRESH_TOKEN }}
+          kiro-client-id: ${{ secrets.KIRO_CLIENT_ID }}
+          kiro-client-secret: ${{ secrets.KIRO_CLIENT_SECRET }}
+          # kiro-sso-region: us-east-1  # default; change if your account is in another region
+
+      - name: AI Analysis
+        run: |
+          kiro-cli-chat chat --no-interactive \
+            "Summarize these linting issues and suggest fixes: $(cat lint.json)" \
+            > analysis.md
+
+      - name: Upload Analysis
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f  # v7
+        with:
+          name: ai-analysis
+          path: analysis.md

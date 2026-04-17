@@ -31,6 +31,26 @@ inputs:
     description: 'Use musl-linked binary for older glibc environments (e.g. Alpine Linux)'
     required: false
     default: 'false'
+  seed-token-cache:
+    description: 'Pre-populate ~/.local/share/kiro-cli/data.sqlite3 with auth tokens for headless operation without KIRO_API_KEY'
+    required: false
+    default: 'false'
+  kiro-refresh-token:
+    description: 'Kiro refresh token (from one-time manual login). Required when seed-token-cache is true.'
+    required: false
+    default: ''
+  kiro-client-id:
+    description: 'Kiro OAuth client ID (from device registration). Required when seed-token-cache is true.'
+    required: false
+    default: ''
+  kiro-client-secret:
+    description: 'Kiro OAuth client secret (from device registration). Required when seed-token-cache is true.'
+    required: false
+    default: ''
+  kiro-sso-region:
+    description: 'AWS region used during initial Kiro login (for SSO token endpoint).'
+    required: false
+    default: 'us-east-1'
 
 outputs:
   kiro-version:
@@ -49,6 +69,25 @@ runs:
         OS="${{ runner.os }}"
         if [ "$OS" != "Linux" ]; then
           echo "::error::Kiro CLI action only supports Linux runners. Use the official install script for macOS: curl -fsSL https://cli.kiro.dev/install | bash"
+          exit 1
+        fi
+
+    - name: Validate token cache inputs
+      if: inputs.seed-token-cache == 'true'
+      shell: bash
+      run: |
+        MISSING=""
+        if [ -z "${{ inputs.kiro-refresh-token }}" ]; then
+          MISSING="$MISSING kiro-refresh-token"
+        fi
+        if [ -z "${{ inputs.kiro-client-id }}" ]; then
+          MISSING="$MISSING kiro-client-id"
+        fi
+        if [ -z "${{ inputs.kiro-client-secret }}" ]; then
+          MISSING="$MISSING kiro-client-secret"
+        fi
+        if [ -n "$MISSING" ]; then
+          echo "::error::seed-token-cache is true but the following required inputs are missing:$MISSING"
           exit 1
         fi
 
@@ -129,6 +168,43 @@ runs:
       run: | # zizmor: ignore[github-env]
         echo "$HOME/.local/bin" >> $GITHUB_PATH
         echo "path=$HOME/.local/bin" >> $GITHUB_OUTPUT
+
+    - name: Seed token cache
+      if: inputs.seed-token-cache == 'true'
+      shell: bash
+      run: | # zizmor: ignore[template-injection]
+        echo "::add-mask::${{ inputs.kiro-refresh-token }}"
+        echo "::add-mask::${{ inputs.kiro-client-id }}"
+        echo "::add-mask::${{ inputs.kiro-client-secret }}"
+
+        # Ensure sqlite3 is available
+        if ! command -v sqlite3 &>/dev/null; then
+          echo "::error::sqlite3 is required for token cache seeding but was not found on the runner."
+          exit 1
+        fi
+
+        DB_DIR="$HOME/.local/share/kiro-cli"
+        DB_PATH="$DB_DIR/data.sqlite3"
+        mkdir -p "$DB_DIR"
+
+        REFRESH_TOKEN="${{ inputs.kiro-refresh-token }}"
+        CLIENT_ID="${{ inputs.kiro-client-id }}"
+        CLIENT_SECRET="${{ inputs.kiro-client-secret }}"
+        REGION="${{ inputs.kiro-sso-region }}"
+
+        sqlite3 "$DB_PATH" "CREATE TABLE IF NOT EXISTS auth_kv (key TEXT PRIMARY KEY, value TEXT);"
+
+        DEVICE_REG=$(printf '{"client_id":"%s","client_secret":"%s","region":"%s"}' \
+          "$CLIENT_ID" "$CLIENT_SECRET" "$REGION")
+        TOKEN_REC=$(printf '{"access_token":"expired","refresh_token":"%s","expires_at":"2020-01-01T00:00:00Z","region":"%s"}' \
+          "$REFRESH_TOKEN" "$REGION")
+
+        sqlite3 "$DB_PATH" \
+          "INSERT OR REPLACE INTO auth_kv (key, value) VALUES ('kirocli:odic:device-registration', '$DEVICE_REG');"
+        sqlite3 "$DB_PATH" \
+          "INSERT OR REPLACE INTO auth_kv (key, value) VALUES ('kirocli:odic:token', '$TOKEN_REC');"
+
+        echo "Token cache seeded at $DB_PATH"
 
     - name: Configure SIGV4 authentication
       if: inputs.enable-sigv4 == 'true'

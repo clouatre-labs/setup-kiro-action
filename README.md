@@ -86,6 +86,12 @@ jobs:
 | `aws-region` | AWS region for Kiro CLI operations | No | `us-east-1` |
 | `enable-sigv4` | Enable SIGV4 authentication mode | No | `false` |
 | `verify-checksum` | Verify SHA256 checksum of downloaded binary | No | `true` |
+| `musl` | Use musl-linked binary for older glibc environments | No | `false` |
+| `seed-token-cache` | Pre-populate SQLite token cache for headless operation | No | `false` |
+| `kiro-refresh-token` | Kiro refresh token (from one-time manual login) | No | `""` |
+| `kiro-client-id` | Kiro OAuth client ID (from device registration) | No | `""` |
+| `kiro-client-secret` | Kiro OAuth client secret (from device registration) | No | `""` |
+| `kiro-sso-region` | AWS region used during initial Kiro login | No | `us-east-1` |
 
 ## Outputs
 
@@ -140,6 +146,70 @@ Required IAM permissions:
   }]
 }
 ```
+
+### Headless Authentication (Token Cache Seeding)
+
+When neither SIGV4 nor `KIRO_API_KEY` is available, you can seed kiro-cli's SQLite token cache with credentials obtained from a one-time manual login. This allows `kiro-cli-chat` to perform a token refresh automatically at startup.
+
+#### Overview
+
+`kiro-cli` stores OAuth tokens in `~/.local/share/kiro-cli/data.sqlite3`. By pre-populating this database with a valid refresh token and device registration record before the binary runs, CI can authenticate without a browser or API key.
+
+#### One-Time Credential Extraction
+
+Run this once on your local machine where you have already logged in to Kiro:
+
+```bash
+# Extract credentials from your local Kiro token cache
+sqlite3 ~/.local/share/kiro-cli/data.sqlite3 \
+  "SELECT key, value FROM auth_kv WHERE key LIKE 'kirocli:odic:%';"
+```
+
+From the output, copy:
+- `client_id` and `client_secret` from the `kirocli:odic:device-registration` record
+- `refresh_token` from the `kirocli:odic:token` record
+
+#### GitHub Secrets Setup
+
+Add the following secrets to your repository (Settings > Secrets and variables > Actions):
+
+| Secret | Value |
+|--------|-------|
+| `KIRO_REFRESH_TOKEN` | `refresh_token` value from the token record |
+| `KIRO_CLIENT_ID` | `client_id` value from the device-registration record |
+| `KIRO_CLIENT_SECRET` | `client_secret` value from the device-registration record |
+
+#### Example Usage
+
+```yaml
+- name: Setup Kiro CLI
+  uses: clouatre-labs/setup-kiro-action@v1
+  with:
+    seed-token-cache: true
+    kiro-refresh-token: ${{ secrets.KIRO_REFRESH_TOKEN }}
+    kiro-client-id: ${{ secrets.KIRO_CLIENT_ID }}
+    kiro-client-secret: ${{ secrets.KIRO_CLIENT_SECRET }}
+
+- name: Run AI Analysis
+  run: kiro-cli-chat chat --no-interactive "Summarize these changes"
+```
+
+See [examples/token-cache-seeding.yml](examples/token-cache-seeding.yml) for a complete workflow.
+
+#### Limitations
+
+- **Issue [kirodotdev/Kiro#4847](https://github.com/kirodotdev/Kiro/issues/4847):** `kiro-cli-chat` does not persist the refreshed access token back to SQLite after refreshing. Each run seeds from the stored refresh token and works for that run, but subsequent reads of the database will see stale data. This is not a problem for typical single-invocation CI jobs.
+- **Unknown refresh token lifetime:** The refresh token expiry is not documented. As a conservative estimate, rotate the `KIRO_REFRESH_TOKEN` secret every 60 days by repeating the one-time extraction step.
+- **Social login users:** This guide covers the OIDC/Builder ID path (`kirocli:odic:*` keys). If you logged in via social (Google/GitHub), your keys will be `kirocli:social:*`. The seeding mechanism is the same; only the key names differ.
+- **sqlite3 required:** The runner must have `sqlite3` installed. It is available by default on `ubuntu-24.04` and `ubuntu-22.04`.
+
+#### Authentication Method Comparison
+
+| Method | Status | Notes |
+|--------|--------|-------|
+| Token cache seeding | Working | Manual setup; requires periodic secret rotation |
+| `KIRO_API_KEY` | Working | Simplest option if an API key is available |
+| SIGV4 (`AMAZON_Q_SIGV4`) | Not implemented | Blocked upstream; track [kirodotdev/Kiro#5938](https://github.com/kirodotdev/Kiro/issues/5938) |
 
 ### IAM Credentials (Local / Simple Setups)
 
