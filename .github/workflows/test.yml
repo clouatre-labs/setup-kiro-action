@@ -5,10 +5,10 @@ on:
     branches: [main]
     paths:
       - 'action.yml'
-      - 'src/**'
       - '.github/workflows/test.yml'
   pull_request:
     branches: [main]
+  merge_group:
   workflow_dispatch:
 
 concurrency:
@@ -23,6 +23,29 @@ jobs:
     name: Test on Ubuntu ARM64
     if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
     runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Test action
+        uses: ./
+        id: kiro
+
+      - name: Verify installation
+        run: |
+          echo "Kiro version: ${{ steps.kiro.outputs.kiro-version }}"
+          echo "Kiro path: ${{ steps.kiro.outputs.kiro-path }}"
+          kiro-cli-chat --version
+
+      - name: Test kiro-cli-chat command
+        run: |
+          which kiro-cli-chat
+          kiro-cli-chat --help
+
+  test-ubuntu-x64:
+    name: Test on Ubuntu x64
+    if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -143,7 +166,7 @@ jobs:
     name: CI Result
     runs-on: ubuntu-24.04-arm
     if: always()
-    needs: [test-ubuntu-arm64, test-cache, test-sigv4-config, test-checksum-verification, test-musl, zizmor]
+    needs: [test-ubuntu-arm64, test-ubuntu-x64, test-cache, test-sigv4-config, test-checksum-verification, test-musl, zizmor]
     permissions: {}
     steps:
       - name: Verify all jobs passed or were skipped

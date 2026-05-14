@@ -113,10 +113,11 @@ See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
 | OS | Architecture | Runner Label |
 |----|--------------|--------------|
 | Ubuntu | x64 | `ubuntu-24.04`, `ubuntu-22.04` |
+| Ubuntu | ARM64 | `ubuntu-24.04-arm` |
 
 macOS and Windows are not supported. For macOS, use the official install script: `curl -fsSL https://cli.kiro.dev/install | bash`
 
-Self-hosted ARM64 runners may work but are untested.
+Both x64 and ARM64 architectures are tested in CI.
 
 ## Authentication
 

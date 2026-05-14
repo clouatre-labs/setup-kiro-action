@@ -14,7 +14,7 @@ inputs:
   version:
     description: 'Kiro CLI version to install'
     required: false
-    default: '1.29.8'
+    default: '2.3.0'
   aws-region:
     description: 'AWS region for Kiro CLI operations'
     required: false
@@ -95,6 +95,10 @@ runs:
           curl --proto '=https' --tlsv1.2 -sSfL "${DOWNLOAD_URL}.sha256" -o kiro.zip.sha256
           
           EXPECTED_SHA=$(cat kiro.zip.sha256)
+          if ! [[ "$EXPECTED_SHA" =~ ^[a-f0-9]{64}$ ]]; then
+            echo "::error::Invalid SHA256 format in checksum file: '$EXPECTED_SHA'"
+            exit 1
+          fi
           ACTUAL_SHA=$(shasum -a 256 kiro.zip | cut -d' ' -f1)
           
           if [ "$EXPECTED_SHA" != "$ACTUAL_SHA" ]; then
@@ -109,6 +113,10 @@ runs:
         # Get actual version from BUILD-INFO if available
         if [ -f kirocli/BUILD-INFO ]; then
           ACTUAL_VERSION=$(grep '^BUILD_VERSION=' kirocli/BUILD-INFO | cut -d= -f2)
+          if [ -z "$ACTUAL_VERSION" ]; then
+            echo "::warning::BUILD_VERSION not found in kirocli/BUILD-INFO, using input version"
+            ACTUAL_VERSION="${{ inputs.version }}"
+          fi
           echo "version=${ACTUAL_VERSION}" >> $GITHUB_OUTPUT
         else
           echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
@@ -119,7 +127,7 @@ runs:
         chmod +x ~/.local/bin/kiro-cli-chat
         
         # Cleanup
-        rm -rf kirocli kiro.zip
+        rm -rf kirocli kiro.zip kiro.zip.sha256
         
         echo "::endgroup::"
 
