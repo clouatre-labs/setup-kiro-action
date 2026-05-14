@@ -21,7 +21,7 @@ The action makes no outbound calls beyond the AWS CDN download URL and optional 
 
 The primary attack surfaces are:
 
-1. **Supply chain -- upstream binary**: The Kiro CLI binary is downloaded from the AWS CDN at `desktop-release.q.us-east-1.amazonaws.com`. This is mitigated by using HTTPS exclusively and pinning to a caller-specified version. Optional SHA256 checksum verification is available via the `verify-checksum` input (default: false).
+1. **Supply chain -- upstream binary**: The Kiro CLI binary is downloaded from the AWS CDN at `desktop-release.q.us-east-1.amazonaws.com`. This is mitigated by using HTTPS exclusively and pinning to a caller-specified version. SHA256 checksum verification is enabled by default via the `verify-checksum` input.
 
 2. **Prompt injection in caller workflows**: Callers that pass user-controlled content (git diffs, commit messages) to Kiro CLI are vulnerable to prompt injection. This is a known risk documented in the README with three defensive tiers (see [Security Patterns](README.md#security-patterns)).
 
@@ -31,7 +31,7 @@ The primary attack surfaces are:
 
 | Weakness | Status |
 |----------|--------|
-| MITM on download | Mitigated -- HTTPS enforced; no plain-HTTP fallback; optional SHA256 verify-checksum |
+| MITM on download | Mitigated -- HTTPS enforced; no plain-HTTP fallback; SHA256 verification enabled by default |
 | Malicious cached binary | Mitigated -- cache key includes version, OS, and arch; a stale or corrupted cache entry results in a fresh download |
 | Secret leakage in logs | Mitigated -- zizmor scans all workflows; no secrets are handled by the action itself |
 | Dependency confusion | Not applicable -- no package manager dependencies; binary only |
@@ -42,12 +42,11 @@ The primary attack surfaces are:
 - All GitHub Actions used by this action and its CI workflow are pinned to SHA digests (enforced by zizmor)
 - Renovate bot creates weekly PRs for digest updates
 - The Kiro CLI binary is downloaded from the official AWS CDN only
-- Optional SHA256 checksum verification is available via the `verify-checksum` input
+- SHA256 checksum verification is enabled by default via the `verify-checksum` input
 
 ## Known gaps
 
-- **No sigstore/Cosign attestation**: The AWS CDN does not provide Sigstore/Cosign attestations. The `verify-checksum` input provides SHA256 verification as an opt-in alternative (default: false).
-- **Checksum verification is opt-in**: The `verify-checksum` input defaults to false for backwards compatibility. Users who require verification must explicitly set `verify-checksum: true`.
+- **No sigstore/Cosign attestation**: The AWS CDN does not provide Sigstore/Cosign attestations. SHA256 checksum verification provides integrity validation as an alternative.
 
 ## External action dependencies
 
