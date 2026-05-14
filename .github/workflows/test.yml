@@ -19,10 +19,10 @@ permissions:
   contents: read
 
 jobs:
-  test-ubuntu-x64:
-    name: Test on Ubuntu x64
+  test-ubuntu-arm64:
+    name: Test on Ubuntu ARM64
     if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -45,7 +45,7 @@ jobs:
   test-cache:
     name: Test caching
     if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -66,7 +66,7 @@ jobs:
   test-sigv4-config:
     name: Test SIGV4 configuration
     if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -93,7 +93,7 @@ jobs:
   test-checksum-verification:
     name: Test SHA256 verification
     if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -111,7 +111,7 @@ jobs:
   test-musl:
     name: Test musl variant
     if: github.event_name == 'push' || github.event.pull_request.draft == false || github.event_name == 'merge_group'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -128,7 +128,7 @@ jobs:
 
   zizmor:
     name: zizmor
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: read
     steps:
@@ -141,9 +141,9 @@ jobs:
 
   ci-result:
     name: CI Result
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04-arm
     if: always()
-    needs: [test-ubuntu-x64, test-cache, test-sigv4-config, test-checksum-verification, test-musl, zizmor]
+    needs: [test-ubuntu-arm64, test-cache, test-sigv4-config, test-checksum-verification, test-musl, zizmor]
     permissions: {}
     steps:
       - name: Verify all jobs passed or were skipped
