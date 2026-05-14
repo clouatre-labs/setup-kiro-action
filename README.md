@@ -1,8 +1,6 @@
 # Setup Kiro CLI Action
 
-[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue?logo=github&style=flat-square)](https://github.com/marketplace/actions/setup-kiro-cli)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](LICENSE)
-[![OpenSSF Best Practices](https://img.shields.io/cii/level/12330?style=flat-square)](https://www.bestpractices.dev/projects/12330)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Setup%20Kiro%20CLI-blue?logo=github&style=flat-square)](https://github.com/marketplace/actions/setup-kiro-cli) [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](LICENSE) [![OpenSSF Best Practices](https://img.shields.io/cii/level/12330?style=flat-square)](https://www.bestpractices.dev/projects/12330)
 
 A GitHub Action that installs and caches [Kiro CLI](https://kiro.dev/docs/cli/) for CI/CD workflows, with headless IAM authentication via SIGV4. OpenSSF silver certified: fewer than 1% of open source projects reach this level.
 
