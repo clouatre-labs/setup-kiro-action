@@ -8,18 +8,19 @@ on:
 permissions: {}
 
 jobs:
-  review:
+  label:
     runs-on: ubuntu-24.04-arm
     permissions:
       pull-requests: write
       issues: write
       contents: read
+      attestations: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Review PR
-        uses: clouatre-labs/aptu@cb08760ef7f38176359a4b1713297cced31b76f5 # v0.7.0
+        uses: clouatre-labs/aptu@475e47a210fc7c10bf9a5a4d453c0eeb0e97f9fc # v0.8.1
         continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -28,7 +29,8 @@ jobs:
           openrouter-api-key: ${{ secrets.OPENROUTER_API_KEY }}
           provider: gemini
           model: gemini-3.1-flash-lite-preview
-          fallback-provider: openrouter
-          fallback-model: inception/mercury-2
+          skip-labeled: 'false'
+          fallback-provider: 'openrouter'
+          fallback-model: 'inception/mercury-2'
           instructions-file: .github/instructions/pr-review.md
           repo-path: ${{ github.workspace }}
