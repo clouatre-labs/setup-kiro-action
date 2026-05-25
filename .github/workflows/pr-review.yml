@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
       - name: Review PR
-        uses: clouatre-labs/aptu@8c21f970ddc71cb2955a3434d594cc4a7f27830c # v0.8.2
+        uses: clouatre-labs/aptu@26faf669f25e754e4dd4488f77d31a81d2998c60 # v0.8.3
         continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
