@@ -28,7 +28,7 @@ jobs:
           gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
           openrouter-api-key: ${{ secrets.OPENROUTER_API_KEY }}
           provider: gemini
-          model: gemini-3.1-flash-lite-preview
+          model: gemini-3.1-flash-lite
           skip-labeled: 'false'
           fallback-provider: 'openrouter'
           fallback-model: 'inception/mercury-2'
