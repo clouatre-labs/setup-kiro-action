@@ -1,0 +1,6 @@
+version: 1
+triage:
+  enabled: true
+review:
+  enabled: true
+  instructions-file: .github/instructions/pr-review.md
