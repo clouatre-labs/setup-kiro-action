@@ -37,7 +37,7 @@
     {
       "groupName": "github-actions",
       "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["patch", "minor", "digest", "pin", "lockFileMaintenance"],
+      "matchUpdateTypes": ["major", "minor", "patch", "digest", "pin", "lockFileMaintenance"],
       "automerge": true
     }
   ]
