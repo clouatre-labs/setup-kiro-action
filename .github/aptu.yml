@@ -4,8 +4,7 @@ triage:
 review:
   enabled: true
   instructions-file: .github/instructions/pr-review.md
-
 ai:
-  provider: gemini
-  model: models/gemini-3.1-flash-lite
-  api-key-secret: GEMINI_API_KEY
+  provider: openrouter
+  model: google/gemma-4-26b-a4b-it
+  api-key-secret: OPENROUTER_API_KEY
