@@ -4,6 +4,10 @@ triage:
 review:
   enabled: true
   instructions-file: .github/instructions/pr-review.md
+  skip-labeled: true
+scan:
+  enabled: true
+  fail-on: critical,high
 ai:
   provider: openrouter
   model: google/gemma-4-26b-a4b-it
