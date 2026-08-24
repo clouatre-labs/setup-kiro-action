@@ -1,0 +1,65 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 aptu-github-app Contributors
+
+name: Aptu Dispatch Handler
+
+on:
+  repository_dispatch:
+    types:
+      - aptu-review
+      - aptu-triage
+      - aptu-scan-security
+
+jobs:
+  review:
+    name: Review PR
+    if: github.event.action == 'aptu-review'
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: clouatre-labs/aptu-github-app/.github/workflows/pr-review.yml@be3845a6f9d9059ff025d87f283c48ee35abbf1d # main
+    with:
+      originating_repo: ${{ github.event.client_payload.originating_repo }}
+      pull_number: ${{ github.event.client_payload.pull_number }}
+      instructions_file: ${{ github.event.client_payload.instructions_file || '.github/instructions/pr-review.md' }}
+      skip_labeled: ${{ github.event.client_payload.skip_labeled || false }}
+      ai_provider: ${{ github.event.client_payload.ai_provider || 'openrouter' }}
+      ai_model: ${{ github.event.client_payload.ai_model || 'google/gemma-4-26b-a4b-it' }}
+    secrets:
+      ai-api-key: >-
+        ${{ (github.event.client_payload.ai_provider == 'anthropic' && secrets.ANTHROPIC_API_KEY)
+         || (github.event.client_payload.ai_provider == 'gemini' && secrets.GEMINI_API_KEY)
+         || secrets.OPENROUTER_API_KEY }}
+
+  triage:
+    name: Triage Issue
+    if: github.event.action == 'aptu-triage'
+    permissions:
+      contents: read
+      issues: write
+    uses: clouatre-labs/aptu-github-app/.github/workflows/issue-triage.yml@be3845a6f9d9059ff025d87f283c48ee35abbf1d # main
+    with:
+      originating_repo: ${{ github.event.client_payload.originating_repo }}
+      issue_number: ${{ github.event.client_payload.issue_number }}
+      ai_provider: ${{ github.event.client_payload.ai_provider || 'openrouter' }}
+      ai_model: ${{ github.event.client_payload.ai_model || 'google/gemma-4-26b-a4b-it' }}
+    secrets:
+      ai-api-key: >-
+        ${{ (github.event.client_payload.ai_provider == 'anthropic' && secrets.ANTHROPIC_API_KEY)
+         || (github.event.client_payload.ai_provider == 'gemini' && secrets.GEMINI_API_KEY)
+         || secrets.OPENROUTER_API_KEY }}
+
+  scan:
+    name: Scan Security
+    if: github.event.action == 'aptu-scan-security'
+    permissions:
+      contents: read
+      security-events: write
+      statuses: write
+    uses: clouatre-labs/aptu-github-app/.github/workflows/scan-security.yml@be3845a6f9d9059ff025d87f283c48ee35abbf1d # main
+    with:
+      originating_repo: ${{ github.event.client_payload.originating_repo }}
+      head_sha: ${{ github.event.client_payload.head_sha }}
+      pull_number: ${{ github.event.client_payload.pull_number }}
+      scan_path: ${{ github.event.client_payload.scan_path || '.' }}
+      fail_on: ${{ github.event.client_payload.fail_on || '' }}
