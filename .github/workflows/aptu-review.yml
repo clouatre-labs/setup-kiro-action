@@ -14,7 +14,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    uses: clouatre-labs/aptu-github-app/.github/workflows/pr-review.yml@78b2c41720d69bf1e4e802fb2a3cbaf175092639 # main
+    uses: clouatre-labs/aptu-github-app/.github/workflows/pr-review.yml@56f54aa99b97cae128d0aa2237cafc91067e9ee9 # main
     with:
       originating_repo: ${{ github.event.client_payload.originating_repo }}
       pull_number: ${{ github.event.client_payload.pull_number }}
