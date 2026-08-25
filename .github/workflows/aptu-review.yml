@@ -22,10 +22,9 @@ jobs:
       skip_labeled: ${{ github.event.client_payload.skip_labeled || false }}
       ai_provider: ${{ github.event.client_payload.ai_provider || 'openrouter' }}
       ai_model: ${{ github.event.client_payload.ai_model || 'google/gemma-4-26b-a4b-it' }}
-      app_id: ${{ vars.APP_ID }}
     secrets:
       ai-api-key: >-
         ${{ (github.event.client_payload.ai_provider == 'anthropic' && secrets.ANTHROPIC_API_KEY)
          || (github.event.client_payload.ai_provider == 'gemini' && secrets.GEMINI_API_KEY)
          || secrets.OPENROUTER_API_KEY }}
-      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      installation-token: ${{ github.event.client_payload.installation_token }}
