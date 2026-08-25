@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 aptu-github-app Contributors
+
+name: Aptu Triage
+
+on:
+  repository_dispatch:
+    types:
+      - aptu-triage
+
+jobs:
+  triage:
+    name: Triage Issue
+    permissions:
+      contents: read
+      issues: write
+    uses: clouatre-labs/aptu-github-app/.github/workflows/issue-triage.yml@56f54aa99b97cae128d0aa2237cafc91067e9ee9 # main
+    with:
+      originating_repo: ${{ github.event.client_payload.originating_repo }}
+      issue_number: ${{ github.event.client_payload.issue_number }}
+      ai_provider: ${{ github.event.client_payload.ai_provider || 'openrouter' }}
+      ai_model: ${{ github.event.client_payload.ai_model || 'google/gemma-4-26b-a4b-it' }}
+      app_id: ${{ vars.APP_ID }}
+    secrets:
+      ai-api-key: >-
+        ${{ (github.event.client_payload.ai_provider == 'anthropic' && secrets.ANTHROPIC_API_KEY)
+         || (github.event.client_payload.ai_provider == 'gemini' && secrets.GEMINI_API_KEY)
+         || secrets.OPENROUTER_API_KEY }}
+      app-private-key: ${{ secrets.APP_PRIVATE_KEY }}
