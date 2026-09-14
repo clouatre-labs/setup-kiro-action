@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a Security Vulnerability
+    url: https://github.com/clouatre-labs/setup-kiro-action/security/advisories/new
+    about: Please report security vulnerabilities privately via a GitHub security advisory.
