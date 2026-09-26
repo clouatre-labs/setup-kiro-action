@@ -1,0 +1,25 @@
+---
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 aptu-github-app Contributors
+
+name: Aptu Lint Issue
+
+on:
+  repository_dispatch:
+    types:
+      - aptu-lint-issue
+
+jobs:
+  lint:
+    name: Lint Issue
+    permissions:
+      contents: read
+      issues: write
+    uses: clouatre-labs/aptu-github-app/.github/workflows/lint-issue.yml@49ef0f601115ec37d1037636d86cda05a5f47eb2 # v0.1.11
+    with:
+      originating_repo: ${{ github.event.client_payload.originating_repo }}
+      issue_number: ${{ github.event.client_payload.issue_number }}
+      issue_body: ${{ github.event.client_payload.issue_body }}
+      lint_spec: ${{ github.event.client_payload.lint_spec || '' }}
+    secrets:
+      installation-token: ${{ github.event.client_payload.installation_token }}
