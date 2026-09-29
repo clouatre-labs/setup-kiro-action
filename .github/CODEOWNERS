@@ -1,3 +1,6 @@
-# All paths are owned by the maintainer.
-# GitHub Copilot reviews do not satisfy this requirement.
-* @clouatre
+# Standard code owners (clouatre-labs/.github#26).
+# maintainers: code ownership for all paths.
+# security-reviewers: required reviewer gate on CI workflows and security config.
+*       @clouatre-labs/maintainers
+.github/workflows/ @clouatre-labs/security-reviewers
+/zizmor.yml @clouatre-labs/security-reviewers
