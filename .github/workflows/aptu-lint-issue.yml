@@ -15,7 +15,7 @@ jobs:
     permissions:
       contents: read
       issues: write
-    uses: clouatre-labs/aptu-github-app/.github/workflows/lint-issue.yml@49ef0f601115ec37d1037636d86cda05a5f47eb2 # v0.1.11
+    uses: clouatre-labs/aptu-github-app/.github/workflows/lint-issue.yml@00fe3b2e890b5ec4c7b88541e0a2b25ef0543933 # v0.1.12
     with:
       originating_repo: ${{ github.event.client_payload.originating_repo }}
       issue_number: ${{ github.event.client_payload.issue_number }}
