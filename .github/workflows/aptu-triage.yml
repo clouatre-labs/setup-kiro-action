@@ -14,7 +14,7 @@ jobs:
     permissions:
       contents: read
       issues: write
-    uses: clouatre-labs/aptu-github-app/.github/workflows/issue-triage.yml@768060d08ba281e9e1e03df7d2a97a66a2cebb3e # v0.2.2
+    uses: clouatre-labs/aptu-github-app/.github/workflows/issue-triage.yml@ed1dfc1e63788426bd075ba22a45d78489544cfb # v0.2.3
     with:
       originating_repo: ${{ github.event.client_payload.originating_repo }}
       issue_number: ${{ github.event.client_payload.issue_number }}
